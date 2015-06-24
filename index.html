@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
   </head>
   <body>
-    <div id="map"></div>
+    <div id="map" style="border: 1px solid #AAA; height: 760px; width: 760px"></div>
 
     <!-- include cartodb.js library -->
     <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
@@ -24,14 +24,17 @@
       function main() {
         var map = new L.Map('map', {
           zoomControl: true,
-          center: [40, 0],
+          center: [35, 0],
           zoom: 4,
+          cartodb_logo: false,
+          fullscreen: true,
           legends: false
+		  // note the time slider only works for the first viz layer loaded and pressing it messes everything up
         });
 
       //Set the backdrop mapping
 	   L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/terrain/{z}/{x}/{y}.png', {
-	   attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
+	   attribution: 'Gull data CC0 <a href="http://lifewatch.inbo.be">Lifewatch INBO</a>',
 	   subdomains: '0123',
 	   minZoom: 2,
 	   maxZoom: 8
@@ -39,7 +42,7 @@
 
 	  // Set the Labels on the backdrop and make pale
 	  var Stamen_TonerLabels = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.png', {
-	   attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+	   attribution: 'Map tiles &copy;2012 Esri & by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth',
 	   subdomains: 'abcd',
 	   minZoom: 0,
 	   maxZoom: 18,
@@ -48,10 +51,17 @@
 }).addTo(map);
 
         //Add viz layers
-        cartodb.createLayer(map, 'https://lizzyscott.cartodb.com/api/v2_1/viz/9226afc0-15d5-11e5-8f5b-0e853d047bba/viz.json')
-            .addTo(map);
-        cartodb.createLayer(map, 'https://lizzyscott.cartodb.com/api/v2_1/viz/7cfc4990-12d6-11e5-b8b0-0e0c41326911/viz.json')
-            .addTo(map)
+
+			//add gull719
+         cartodb.createLayer(map, 'https://lizzyscott.cartodb.com/api/v2/viz/2cf47072-1a5f-11e5-9ae0-0e0c41326911/viz.json')
+             .addTo(map);
+
+			 //add gull623
+         cartodb.createLayer(map, 'https://lizzyscott.cartodb.com/api/v2/viz/daad6a02-1a5f-11e5-bb00-0e018d66dc29/viz.json')
+             .addTo(map)
+
+// I have no idea what this bit does but console complains : layer.setInteraction is not a function
+
          .on('done', function(layer) {
           layer.setInteraction(true);
           layer.on('featureOver', function(e, latlng, pos, data) {
@@ -64,7 +74,7 @@
           cartodb.log.log("some error occurred");
         });
       }
-      // you could use $(window).load(main);
+      // Now load it all
       window.onload = main;
     </script>
   </body>
